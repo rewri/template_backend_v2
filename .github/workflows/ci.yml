@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run linter
+      run: npm run lint
+
+    - name: Run tests
+      run: npm run test
+
+    - name: Run e2e tests
+      run: npm run test:e2e
+
+    - name: Build application
+      run: npm run build
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run: docker build -t backend-api .
+
+    - name: Test Docker image
+      run: |
+        docker run --rm -d --name test-container -p 3000:3000 backend-api
+        sleep 10
+        # Adicione aqui testes de health check se necessário
+        docker stop test-container
