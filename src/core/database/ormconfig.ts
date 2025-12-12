@@ -32,11 +32,9 @@ export function createDatabaseConfig(
       isRuntime ? 'dist/core/database/migrations/*{.ts,.js}' : migrationsPath,
     ],
     migrationsTableName: 'migrations',
-    timezone: 'America/Sao_Paulo',
     synchronize: false,
     logging: configService.get('NODE_ENV') === 'development',
     extra: {
-      trustServerCertificate: true,
       ...(configService.get('MARIADB_SSL') === 'true' && {
         ssl: {
           rejectUnauthorized: false,
