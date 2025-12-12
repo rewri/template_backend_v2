@@ -2,9 +2,17 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './core/shared/filters/http-exception.filter';
+import { ResponseInterceptor } from './core/shared/interceptors/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Filtro global para tratamento de exceções
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  // Interceptor global para padronizar respostas de sucesso
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -15,11 +23,22 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('Template Backend')
-    .setDescription('Documentação da API - Template Backend')
-    .setVersion('1.0')
-    .addTag('api')
-    .addBearerAuth()
+    .setTitle('Template Backend API')
+    .setDescription(
+      'Documentação completa da API do Template Backend desenvolvido com NestJS.',
+    )
+    .setVersion('1.0.0')
+    .addTag('app', 'Endpoints básicos da aplicação')
+    .addTag('employees', 'Gerenciamento de funcionários e ramais')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      name: 'JWT',
+      description: 'Digite o token JWT',
+      in: 'header',
+    })
+    .addServer('http://localhost:3000', 'Desenvolvimento Local')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
