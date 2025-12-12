@@ -1,6 +1,14 @@
 # Backend API Template V2
 
-Um template completo de API REST construída com NestJS, TypeScript e TypeORM, configurada para rodar com Docker e MariaDB.
+[![NestJS](https://img.shields.io/badge/NestJS-11.x-ea2845?style=flat-square&logo=nestjs)](https://nestjs.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![TypeORM](https://img.shields.io/badge/TypeORM-0.3.x-fe0803?style=flat-square&logo=typeorm)](https://typeorm.io/)
+[![MariaDB](https://img.shields.io/badge/MariaDB-11.2-003545?style=flat-square&logo=mariadb)](https://mariadb.org/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ed?style=flat-square&logo=docker)](https://www.docker.com/)
+
+Um template completo de API REST construída com **NestJS**, **TypeScript** e **TypeORM**, configurada para rodar com **Docker** e **MariaDB**.
+
+> 🚀 **Pronto para produção** com Docker, migrations automáticas, documentação Swagger e exemplo completo de CRUD.
 
 ## 🚀 Tecnologias
 
@@ -85,7 +93,11 @@ make format      # Formatar código
 make db
 
 # Via docker-compose diretamente
-docker-compose exec mariadb mysql -u backend_app_user -p backend_app_db
+docker compose exec mariadb mysql -u backend_app_user -p backend_app_db
+
+# Via cliente externo (ex: DBeaver, MySQL Workbench)
+# Host: localhost, Porta: 3307
+# Usuário: backend_app_user, Senha: backend_app_pass, DB: backend_app_db
 ```
 
 ### Migrações
@@ -156,7 +168,8 @@ make shell        # Acessar container da app
 make shell-db     # Acessar container do banco
 make logs-app     # Logs da aplicação
 make logs-db      # Logs do banco
-make health       # Status dos containers
+make status       # Status dos containers
+make health       # Verificar saúde dos containers
 
 # Limpeza
 make clean        # Remove containers e volumes
@@ -244,8 +257,8 @@ NODE_ENV=development
 PORT=3000
 
 # Database
-MARIADB_HOST=localhost
-MARIADB_PORT=3307
+MARIADB_HOST=localhost        # Para conexão externa ao container
+MARIADB_PORT=3307            # Porta mapeada do host
 MARIADB_USER=backend_app_user
 MARIADB_PASSWORD=backend_app_pass
 MARIADB_DATABASE=backend_app_db
@@ -255,7 +268,7 @@ MARIADB_SSL=false
 TZ=America/Sao_Paulo
 
 # Migrations (apenas desenvolvimento)
-RUN_MIGRATIONS=false
+RUN_MIGRATIONS=false         # true para executar na inicialização
 ```
 
 ## 🆘 Troubleshooting
@@ -275,6 +288,30 @@ sudo chown -R $USER:$USER .
 make rebuild
 ```
 
+### Erro de porta em uso
+
+```bash
+# Verificar se a porta 3000 ou 3307 estão em uso
+sudo lsof -i :3000
+sudo lsof -i :3307
+
+# Parar processo que está usando a porta (se necessário)
+pkill -f "3000"
+```
+
+### Banco não conecta
+
+```bash
+# Verificar logs do banco
+make logs-db
+
+# Resetar apenas o banco
+docker compose stop mariadb
+docker compose rm mariadb
+docker volume rm backend_mariadb_data
+make up
+```
+
 ### Reset completo
 
 ```bash
@@ -282,12 +319,70 @@ make clean-all
 make dev
 ```
 
+### Problemas com dependências npm
+
+```bash
+# Limpar cache e reinstalar
+make shell
+rm -rf node_modules package-lock.json
+npm install
+```
+
+## 💻 Desenvolvimento Local (Sem Docker)
+
+Se preferir rodar a aplicação localmente sem Docker:
+
+### Pré-requisitos
+
+- Node.js 18+
+- MariaDB 11.2+ instalado localmente
+- npm ou yarn
+
+### Setup
+
+1. **Instale as dependências**:
+
+```bash
+npm install
+```
+
+2. **Configure o banco local**:
+
+```sql
+CREATE DATABASE backend_app_db;
+CREATE USER 'backend_app_user'@'localhost' IDENTIFIED BY 'backend_app_pass';
+GRANT ALL PRIVILEGES ON backend_app_db.* TO 'backend_app_user'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+3. **Configure o .env**:
+
+```env
+MARIADB_HOST=localhost
+MARIADB_PORT=3306  # Porta padrão do MariaDB local
+# ... outras configurações
+```
+
+4. **Execute as migrations**:
+
+```bash
+npm run migration:run
+```
+
+5. **Inicie a aplicação**:
+
+```bash
+npm run start:dev
+```
+
 ## 📋 TODO
 
 - [ ] Implementar autenticação JWT
-- [ ] Implementar testes
 - [ ] Implementar rate limiting
-- [ ] Adicionar logs
+- [ ] Adicionar sistema de logs
+- [ ] Implementar cache com Redis
+- [ ] Adicionar monitoramento (health checks)
+- [ ] Documentar testes unitários e E2E
 
 ---
 

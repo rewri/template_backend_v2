@@ -4,8 +4,8 @@
 # Configurações
 COMPOSE_FILE := docker-compose.yml
 COMPOSE_PROD_FILE := docker-compose.prod.yml
-APP_CONTAINER := template-backend-v2-app
-DB_CONTAINER := template-backend-v2-database
+APP_CONTAINER := backend_app
+DB_CONTAINER := backend_database
 
 # Cores para output
 GREEN := \033[0;32m
@@ -63,7 +63,7 @@ status: ## Mostrar status dos containers
 
 health: ## Verificar saúde dos containers
 	@echo "$(GREEN)Verificando saúde dos containers:$(NC)"
-	@docker ps --filter "name=vertical-slice-nestjs" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+	@docker ps --filter "name=backend_" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
 # Acesso aos containers
 shell: ## Acessar shell da aplicação
@@ -74,7 +74,7 @@ shell-db: ## Acessar shell do MariaDB
 
 db: ## Acessar MariaDB CLI
 	@echo "$(GREEN)Conectando ao MariaDB...$(NC)"
-	@docker compose -f $(COMPOSE_FILE) exec mariadb mysql -u nestjs_user -p nestjs_db
+	@docker compose -f $(COMPOSE_FILE) exec mariadb mysql -u backend_app_user -p backend_app_db
 
 # Desenvolvimento
 install: ## Instalar dependências npm
@@ -121,13 +121,13 @@ clean-all: ## Limpeza completa (containers, volumes, imagens, cache)
 backup-db: ## Fazer backup do banco de dados
 	@echo "$(GREEN)Fazendo backup do banco...$(NC)"
 	@mkdir -p backups
-	@docker compose -f $(COMPOSE_FILE) exec mariadb mysqldump -u nestjs_user -pnestjs_password nestjs_db > backups/backup_$(shell date +%Y%m%d_%H%M%S).sql
+	@docker compose -f $(COMPOSE_FILE) exec mariadb mysqldump -u backend_app_user -pbackend_app_pass backend_app_db > backups/backup_$(shell date +%Y%m%d_%H%M%S).sql
 	@echo "$(GREEN)Backup salvo em backups/$(NC)"
 
 restore-db: ## Restaurar banco (precisa especificar arquivo: make restore-db FILE=backup.sql)
 	@if [ -z "$(FILE)" ]; then echo "$(RED)Erro: Especifique o arquivo com FILE=nome_do_arquivo.sql$(NC)"; exit 1; fi
 	@echo "$(GREEN)Restaurando banco de $(FILE)...$(NC)"
-	@docker compose -f $(COMPOSE_FILE) exec -T mariadb mysql -u nestjs_user -pnestjs_password nestjs_db < $(FILE)
+	@docker compose -f $(COMPOSE_FILE) exec -T mariadb mysql -u backend_app_user -pbackend_app_pass backend_app_db < $(FILE)
 
 # Utilitários
 env: ## Copiar arquivo de exemplo de ambiente

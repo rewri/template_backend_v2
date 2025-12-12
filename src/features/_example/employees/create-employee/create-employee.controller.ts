@@ -1,14 +1,16 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDto } from 'src/core/shared/dto/api-response.dto';
 import { Employee } from '../../shared/entities/employee.entity';
+import { EmployeesController } from '../employees.controller';
 import { CreateEmployeeDTO } from './create-employee.dto';
 import { CreateEmployeeService } from './create-employee.service';
 
 @ApiTags('employees')
-@Controller('employees')
-export class CreateEmployeeController {
-  constructor(private readonly createEmployeeService: CreateEmployeeService) {}
+export class CreateEmployeeController extends EmployeesController {
+  constructor(private readonly createEmployeeService: CreateEmployeeService) {
+    super();
+  }
 
   @Post('')
   @HttpCode(HttpStatus.CREATED)

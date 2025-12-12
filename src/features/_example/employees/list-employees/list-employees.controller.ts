@@ -1,15 +1,17 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDto } from 'src/core/shared/dto/api-response.dto';
 import { PaginationResponseDTO } from 'src/core/shared/dto/pagination-response.dto';
 import { Employee } from '../../shared/entities/employee.entity';
+import { EmployeesController } from '../employees.controller';
 import { ListEmployeesQueryDTO } from './list-employees.dto';
 import { ListEmployeesService } from './list-employees.service';
 
 @ApiTags('employees')
-@Controller('employees')
-export class ListEmployeesController {
-  constructor(private readonly listEmployeesService: ListEmployeesService) {}
+export class ListEmployeesController extends EmployeesController {
+  constructor(private readonly listEmployeesService: ListEmployeesService) {
+    super();
+  }
 
   @Get('')
   @ApiOperation({ summary: 'Listar funcionários com paginação' })
