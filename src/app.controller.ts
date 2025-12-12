@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { AppService } from './app.service';
 import { HealthResponseDto } from './core/shared/dto/api-response.dto';
 
@@ -9,6 +10,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @ApiOperation({ summary: 'Mensagem de boas vindas' })
   @ApiResponse({
     status: 200,
@@ -23,6 +25,7 @@ export class AppController {
   }
 
   @Get('health')
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @ApiOperation({ summary: 'Verificação de integridade' })
   @ApiResponse({
     status: 200,

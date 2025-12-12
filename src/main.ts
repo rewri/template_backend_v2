@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './core/shared/filters/http-exception.filter';
+import { RateLimitHeadersInterceptor } from './core/shared/interceptors/rate-limit-headers.interceptor';
 import { ResponseInterceptor } from './core/shared/interceptors/response.interceptor';
 
 async function bootstrap() {
@@ -13,6 +14,9 @@ async function bootstrap() {
 
   // Interceptor global para padronizar respostas de sucesso
   app.useGlobalInterceptors(new ResponseInterceptor());
+
+  // Interceptor para adicionar headers de rate limiting
+  app.useGlobalInterceptors(new RateLimitHeadersInterceptor());
 
   app.useGlobalPipes(
     new ValidationPipe({

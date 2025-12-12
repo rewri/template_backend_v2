@@ -1,5 +1,6 @@
 import { Body, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { ApiResponseDto } from 'src/core/shared/dto/api-response.dto';
 import { Employee } from '../../shared/entities/employee.entity';
 import { EmployeesController } from '../employees.controller';
@@ -13,6 +14,7 @@ export class CreateEmployeeController extends EmployeesController {
   }
 
   @Post('')
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Criar novo funcionário' })
   @ApiBody({ type: CreateEmployeeDTO })

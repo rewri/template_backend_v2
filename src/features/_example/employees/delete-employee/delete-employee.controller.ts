@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { ApiResponseDto } from 'src/core/shared/dto/api-response.dto';
 import { EmployeesController } from '../employees.controller';
 import { DeleteEmployeeService } from './delete-employee.service';
@@ -17,6 +18,7 @@ export class DeleteEmployeeController extends EmployeesController {
   }
 
   @Delete(':id')
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Deletar funcionário por ID' })
   @ApiParam({

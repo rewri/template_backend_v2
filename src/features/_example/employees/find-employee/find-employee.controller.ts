@@ -1,5 +1,6 @@
 import { Get, Param, ParseIntPipe } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { ApiResponseDto } from 'src/core/shared/dto/api-response.dto';
 import { Employee } from '../../shared/entities/employee.entity';
 import { EmployeesController } from '../employees.controller';
@@ -12,6 +13,7 @@ export class FindEmployeeController extends EmployeesController {
   }
 
   @Get(':id')
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @ApiOperation({ summary: 'Buscar funcionário por ID' })
   @ApiParam({
     name: 'id',
