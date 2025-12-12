@@ -128,9 +128,57 @@ Quando iniciar seu projeto real:
 ## 🧪 Executar Testes
 
 ```bash
-make test        # Testes unitários
-make test-e2e    # Testes de integração
+# Via Makefile (dentro do container)
+make test           # Testes unitários
+make test-watch     # Testes em modo watch
+make test-e2e       # Testes de integração
+
+# Localmente (se não estiver usando Docker)
+npm run test
+npm run test:watch
+npm run test:cov    # Com coverage
+npm run test:e2e
 ```
+
+### Arquivos de Teste Incluídos
+
+- `create-employee.service.spec.ts` - Testes do serviço de criação
+- `delete-employee.service.spec.ts` - Testes do serviço de exclusão
+- `find-employee.service.spec.ts` - Testes do serviço de busca
+- `list-employees.service.spec.ts` - Testes do serviço de listagem
+- `update-employee.service.spec.ts` - Testes do serviço de atualização
+
+Cada arquivo demonstra:
+
+- ✅ **Mocking** de repositories
+- ✅ **Testes unitários** isolados
+- ✅ **Scenarios** de sucesso e erro
+- ✅ **Validação** de DTOs
+
+## ⚡ Performance e Otimizações
+
+### Queries Otimizadas
+
+- **Eager Loading**: Relacionamentos carregados em uma única query
+- **Paginação**: Limitação de resultados para performance
+- **Índices**: Criados automaticamente via migrations
+
+### Boas Práticas Demonstradas
+
+- ✅ **DTOs separados** por operação (não reutilização excessiva)
+- ✅ **Validações específicas** para cada caso de uso
+- ✅ **Tratamento de erros** padronizado
+- ✅ **Repository Pattern** para abstração de dados
+- ✅ **Swagger Documentation** automática
+- ✅ **Testes unitários** isolados e mocados
+
+### Possíveis Melhorias
+
+- [ ] Cache de consultas frequentes
+- [ ] Soft delete em vez de hard delete
+- [ ] Auditoria de alterações (created_by, updated_by)
+- [ ] Filtros avançados na listagem
+- [ ] Upload de foto do funcionário
 
 ---
 

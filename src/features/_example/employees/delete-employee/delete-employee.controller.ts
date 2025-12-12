@@ -1,5 +1,4 @@
 import {
-  Controller,
   Delete,
   HttpCode,
   HttpStatus,
@@ -8,12 +7,14 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDto } from 'src/core/shared/dto/api-response.dto';
+import { EmployeesController } from '../employees.controller';
 import { DeleteEmployeeService } from './delete-employee.service';
 
 @ApiTags('employees')
-@Controller('employees')
-export class DeleteEmployeeController {
-  constructor(private readonly deleteEmployeeService: DeleteEmployeeService) {}
+export class DeleteEmployeeController extends EmployeesController {
+  constructor(private readonly deleteEmployeeService: DeleteEmployeeService) {
+    super();
+  }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)

@@ -1,13 +1,15 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Get, Param, ParseIntPipe } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiResponseDto } from 'src/core/shared/dto/api-response.dto';
 import { Employee } from '../../shared/entities/employee.entity';
+import { EmployeesController } from '../employees.controller';
 import { FindEmployeeService } from './find-employee.service';
 
 @ApiTags('employees')
-@Controller('employees')
-export class FindEmployeeController {
-  constructor(private readonly findEmployeeService: FindEmployeeService) {}
+export class FindEmployeeController extends EmployeesController {
+  constructor(private readonly findEmployeeService: FindEmployeeService) {
+    super();
+  }
 
   @Get(':id')
   @ApiOperation({ summary: 'Buscar funcionário por ID' })

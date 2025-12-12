@@ -232,15 +232,15 @@ npm run migration:revert  # Reverte migration N-1
 ## Variáveis de Ambiente Necessárias
 
 ```env
-MARIADB_HOST=localhost
-MARIADB_PORT=3307                    # Porta mapeada do container
+MARIADB_HOST=localhost               # Para conexão externa (ou 'mariadb' dentro do container)
+MARIADB_PORT=3307                    # Porta mapeada do container (3306 internamente)
 MARIADB_USER=backend_app_user        # Usuário da aplicação
 MARIADB_PASSWORD=backend_app_pass    # Senha da aplicação
 MARIADB_DATABASE=backend_app_db      # Nome do banco
 MARIADB_SSL=false
 NODE_ENV=development
 TZ=America/Sao_Paulo                 # Timezone configurado
-RUN_MIGRATIONS=false                 # Executar migrations na inicialização
+RUN_MIGRATIONS=false                 # Executar migrations na inicialização (true apenas em dev)
 ```
 
 **Nota**: Estas variáveis estão configuradas automaticamente no `docker-compose.yml` e `.env.example`.
