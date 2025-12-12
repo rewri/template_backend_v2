@@ -1,5 +1,6 @@
 import { Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { ApiResponseDto } from 'src/core/shared/dto/api-response.dto';
 import { PaginationResponseDTO } from 'src/core/shared/dto/pagination-response.dto';
 import { Employee } from '../../shared/entities/employee.entity';
@@ -14,6 +15,7 @@ export class ListEmployeesController extends EmployeesController {
   }
 
   @Get('')
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
   @ApiOperation({ summary: 'Listar funcionários com paginação' })
   @ApiQuery({
     name: 'page',

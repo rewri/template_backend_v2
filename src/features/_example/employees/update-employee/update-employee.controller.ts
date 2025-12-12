@@ -6,6 +6,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { ApiResponseDto } from 'src/core/shared/dto/api-response.dto';
 import { Employee } from '../../shared/entities/employee.entity';
 import { UpdateEmployeeDTO } from './update-employee.dto';
@@ -17,6 +18,7 @@ export class UpdateEmployeeController {
   constructor(private readonly updateEmployeeService: UpdateEmployeeService) {}
 
   @Put(':id')
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @ApiOperation({ summary: 'Atualizar funcionário existente' })
   @ApiParam({
     name: 'id',

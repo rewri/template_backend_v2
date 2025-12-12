@@ -375,14 +375,77 @@ npm run migration:run
 npm run start:dev
 ```
 
-## 📋 TODO
+## 🚦 Rate Limiting
 
-- [ ] Implementar autenticação JWT
-- [ ] Implementar rate limiting
-- [ ] Adicionar sistema de logs
-- [ ] Implementar cache com Redis
-- [ ] Adicionar monitoramento (health checks)
-- [ ] Documentar testes unitários e E2E
+A API possui **rate limiting** implementado usando `@nestjs/throttler` para proteger contra abuso e garantir disponibilidade.
+
+### Configuração Global
+
+Por padrão, a aplicação tem três níveis de rate limiting configurados:
+
+- **Short**: 3 requests por segundo (1000ms)
+- **Medium**: 20 requests por 10 segundos (10000ms)
+- **Long**: 100 requests por minuto (60000ms)
+
+### Rate Limiting por Endpoint
+
+Cada endpoint possui configurações específicas usando o decorator `@Throttle`:
+
+```typescript
+// Exemplo de uso
+@Get()
+@Throttle({ default: { limit: 5, ttl: 60000 } }) // 5 requests por minuto
+getHello(): string {
+  return this.appService.getHello();
+}
+```
+
+### Limites por Operação
+
+| Endpoint                | Limite | Justificativa                     |
+| ----------------------- | ------ | --------------------------------- |
+| `GET /`                 | 5/min  | Endpoint informativo              |
+| `GET /health`           | 10/min | Health check                      |
+| `GET /employees`        | 20/min | Listagem (leitura intensiva)      |
+| `GET /employees/:id`    | 30/min | Busca individual (mais frequente) |
+| `POST /employees`       | 5/min  | Criação (operação sensível)       |
+| `PUT /employees/:id`    | 10/min | Atualização (operação moderada)   |
+| `DELETE /employees/:id` | 5/min  | Exclusão (operação crítica)       |
+
+### Configuração de Environment
+
+Você pode personalizar os limites via variáveis de ambiente:
+
+```env
+# Rate Limiting - Ativar/Desativar
+RATE_LIMIT_ENABLED=true
+
+# Configuração curta (por segundo)
+RATE_LIMIT_SHORT_TTL=1000
+RATE_LIMIT_SHORT_LIMIT=3
+
+# Configuração média (por 10 segundos)
+RATE_LIMIT_MEDIUM_TTL=10000
+RATE_LIMIT_MEDIUM_LIMIT=20
+
+# Configuração longa (por minuto)
+RATE_LIMIT_LONG_TTL=60000
+RATE_LIMIT_LONG_LIMIT=100
+```
+
+### Headers de Resposta
+
+A API adiciona headers informativos sobre rate limiting em todas as respostas:
+
+- `X-RateLimit-Policy`: Política ativa de rate limiting
+- `X-RateLimit-Info`: Informação sobre o status do rate limiting
+
+### Tratamento de Erros
+
+Quando o limite é excedido, a API retorna:
+
+- **Status**: `429 Too Many Requests`
+- **Mensagem**: "Rate limit exceeded. Try again later."
 
 ---
 
