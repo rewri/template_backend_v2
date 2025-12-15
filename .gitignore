@@ -75,7 +75,6 @@ ormconfig.json
 .eslintcache
 
 # Editor directories and files
-!.vscode/extensions.json
 .idea/
 *.swp
 *.swo
@@ -119,8 +118,6 @@ ormconfig.json
 .eslintcache
 
 # Editor directories and files
-.vscode/
-!.vscode/extensions.json
 .idea/
 *.swp
 *.swo

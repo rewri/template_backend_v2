@@ -1,0 +1,82 @@
+{
+  // === FORMATAÇÃO ===
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // === PRETTIER ===
+  "prettier.requireConfig": true,
+  "prettier.useEditorConfig": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // === ESLINT (Flat Config) ===
+  "eslint.useFlatConfig": true,
+  "eslint.validate": ["javascript", "typescript"],
+  "eslint.alwaysShowStatus": true,
+  "eslint.format.enable": true,
+
+  // === TYPESCRIPT ===
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.useAliasesForRenames": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.suggest.autoImports": true,
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
+
+  // === ORGANIZAÇÃO DE IMPORTS ===
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always",
+    "source.fixAll": "always",
+    "source.fixAll.eslint": "always"
+  },
+
+  // === TESTES (Jest) ===
+  "jest.autoRun": "off",
+  "jest.enableInlineErrorMessages": true,
+  "jest.testExplorer.enable": true,
+  "jest.jestCommandLine": "npm run test --",
+
+  // === NESTJS ESPECÍFICO ===
+  "typescript.suggest.paths": true,
+  "typescript.preferences.importModuleSpecifier": "shortest",
+
+  // === EDITOR (Alinhado com .editorconfig) ===
+  "editor.suggestSelection": "first",
+
+  // === ARQUIVOS ===
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/coverage": true,
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/coverage/**": true
+  },
+
+  // === BUSCA ===
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/coverage": true,
+    "**/*.lock": true,
+    "**/.git": true
+  },
+
+  // === TERMINAL ===
+  "terminal.integrated.cwd": "${workspaceFolder}",
+  "terminal.integrated.defaultProfile.linux": "zsh"
+}
