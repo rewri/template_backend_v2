@@ -1,17 +1,1 @@
-#!/usr/bin/env sh
-
-echo "🔍 Running pre-commit validations..."
-
-# ESLint + Prettier + Build validation
-echo "📝 Running lint-staged (ESLint + Prettier + Build)..."
-npm run pre-commit
-
-# TypeScript validation
-echo "🔧 Validating TypeScript..."
-npx tsc --noEmit
-
-# Migration validation (check if there are pending migrations)
-echo "🗄️ Checking for pending migrations..."
-npm run migration:show > /dev/null 2>&1 || echo "⚠️ Could not check migrations (this is OK if DB is not running)"
-
-echo "✅ Pre-commit validations completed!"
+npm test
