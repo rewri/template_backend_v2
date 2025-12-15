@@ -28,37 +28,83 @@ Um template completo de API REST construída com **NestJS**, **TypeScript** e **
 
 ## 🚀 Início Rápido
 
-### 1. Clone o repositório e configure o ambiente
+### 🎯 Setup Automático para Novos Projetos (Recomendado)
 
 ```bash
 git clone <url-do-repositorio>
 cd backend
 
-# Cria automaticamente o arquivo .env e sobe o ambiente
-make dev
+# Setup completo automático - configura TUDO!
+make setup
 ```
 
-### 2. Ou configure manualmente
+**Este comando faz automaticamente:**
+
+- ✅ Cria arquivo .env
+- ✅ Sobe containers Docker
+- ✅ Instala dependências
+- ✅ Configura hooks de qualidade (Husky + lint-staged + ESLint + Prettier)
+- ✅ Valida TypeScript e Build
+
+### 🔄 Setup Manual (se preferir)
 
 ```bash
-# Copie o arquivo de exemplo
+# 1. Configure o ambiente
 cp .env.example .env
+vim .env  # Edite se necessário
 
-# Edite as variáveis se necessário
-vim .env
-
-# Suba os containers
+# 2. Suba os containers
 make up
+
+# 3. Configure hooks de qualidade
+make setup-deps
 ```
+
+### 🏠 Setup Local (sem Docker)
+
+```bash
+make setup-local
+```
+
+## ⚙️ Hooks de Qualidade Automáticos
+
+### 🚀 **Configuração Automática**
+
+Com `make setup`, os hooks são configurados automaticamente.
+
+### 📋 **O que acontece a cada `git commit`:**
+
+1. **ESLint** - Correção automática de problemas de código
+2. **Prettier** - Formatação automática
+3. **TypeScript** - Validação de tipos (`tsc --noEmit`)
+4. **Build** - Verifica se o código compila
+5. **Migrations** - Verifica migrações pendentes
+
+### 🔧 **Comandos de Validação Manual:**
+
+```bash
+make validate      # Validação completa (lint + format + tsc + build + test)
+make quality-check # Validação rápida (lint + tsc)
+make setup-hooks   # Reconfigurar hooks (se houver problema)
+```
+
+**💡 Dica:** Use `make validate` antes de fazer `git push` para garantir que tudo está OK!
 
 ## ⚙️ Comandos Disponíveis (Makefile)
 
 O projeto usa um **Makefile** para facilitar o desenvolvimento. Use `make help` para ver todos os comandos:
 
-### Comandos Principais
+### 🎯 Setup e Configuração
 
 ```bash
-make dev          # Setup completo para desenvolvimento
+make setup        # Setup completo para novos projetos (RECOMENDADO)
+make dev          # Setup completo + containers
+make setup-local  # Setup para desenvolvimento local (sem Docker)
+```
+
+### 🐳 Containers Docker
+
+```bash
 make up           # Subir containers de desenvolvimento
 make up-prod      # Subir containers para produção
 make down         # Parar todos os containers
@@ -66,14 +112,22 @@ make status       # Ver status dos containers
 make logs         # Ver logs de todos os containers
 ```
 
-### Desenvolvimento
+### 🔍 Qualidade de Código
+
+```bash
+make validate     # Validação completa (lint + format + tsc + build + test)
+make lint         # Apenas ESLint
+make format       # Apenas Prettier
+make test         # Executar testes
+```
+
+### 🛠️ Desenvolvimento
 
 ```bash
 make shell        # Acessar shell da aplicação
 make db          # Acessar MariaDB CLI
-make test        # Executar testes
-make lint        # Executar linter
-make format      # Formatar código
+make logs-app     # Logs da aplicação
+make logs-db      # Logs do banco
 ```
 
 ## 🗄️ Banco de Dados
@@ -173,7 +227,6 @@ make health       # Verificar saúde dos containers
 
 # Limpeza
 make clean        # Remove containers e volumes
-make clean-all    # Limpeza completa do sistema
 ```
 
 ## 📁 Estrutura do Projeto
@@ -217,10 +270,22 @@ Este template inclui arquivos de exemplo para orientação:
 
 ### 🚀 Para Novo Projeto
 
-1. **Estude os exemplos** em `src/features/_example/`
-2. **Remova** a pasta `_example` quando não precisar mais
-3. **Delete migrations** de exemplo em `src/core/database/migrations/`
-4. **Crie** suas próprias entidades baseadas nos padrões dos exemplos
+1. **Execute setup automático**: `make setup`
+2. **Estude os exemplos** em `src/features/_example/`
+3. **Desenvolva normalmente** - hooks de qualidade funcionam automaticamente
+4. **Remova** a pasta `_example` quando não precisar mais
+5. **Delete migrations** de exemplo em `src/core/database/migrations/`
+6. **Crie** suas próprias entidades baseadas nos padrões dos exemplos
+
+**💡 Fluxo recomendado:**
+
+```bash
+git clone <repo> && cd backend
+make setup              # Configura tudo automaticamente
+# Desenvolver...
+make validate          # Validar antes de push (opcional)
+git add . && git commit -m "feat: nova funcionalidade"  # Hooks automáticos
+```
 
 ## 🛠️ Scripts NPM Disponíveis
 

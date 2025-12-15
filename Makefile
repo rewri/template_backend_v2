@@ -82,6 +82,25 @@ install: ## Instalar dependências npm
 	@docker compose -f $(COMPOSE_FILE) exec app npm install
 	@docker compose -f $(COMPOSE_FILE) exec app chown -R nestjs:nodejs /usr/src/app/node_modules
 
+setup-deps: ## Setup de dependências + hooks de qualidade
+	@echo "$(GREEN)🚀 Setup de dependências do projeto...$(NC)"
+	@make install
+	@make setup-hooks
+	@echo "$(GREEN)✅ Dependências e hooks configurados!$(NC)"
+	@echo "$(YELLOW)📋 Hooks de qualidade ativados (ESLint + Prettier + Build + TypeScript)$(NC)"
+
+setup-hooks: ## Configurar hooks de qualidade de código (Husky + lint-staged)
+	@echo "$(GREEN)⚙️  Configurando hooks de qualidade...$(NC)"
+	@docker compose -f $(COMPOSE_FILE) exec app npm run prepare
+	@echo "$(GREEN)✅ Hooks configurados!$(NC)"
+	@echo "$(YELLOW)📝 Pre-commit: ESLint + Prettier + Build + TypeScript validation$(NC)"
+
+setup-local: ## Setup para desenvolvimento local (sem Docker)
+	@echo "$(GREEN)🏠 Setup local do projeto...$(NC)"
+	@npm install
+	@npm run prepare
+	@echo "$(GREEN)✅ Setup local concluído!$(NC)"
+
 test: ## Executar testes
 	@echo "$(GREEN)Executando testes...$(NC)"
 	@docker compose -f $(COMPOSE_FILE) exec app npm run test
@@ -98,6 +117,21 @@ lint: ## Executar linter
 
 format: ## Formatar código
 	@docker compose -f $(COMPOSE_FILE) exec app npm run format
+
+validate: ## Executar todas as validações de qualidade
+	@echo "$(GREEN)🔍 Executando validações de qualidade...$(NC)"
+	@docker compose -f $(COMPOSE_FILE) exec app npm run lint
+	@docker compose -f $(COMPOSE_FILE) exec app npm run format
+	@docker compose -f $(COMPOSE_FILE) exec app npx tsc --noEmit
+	@docker compose -f $(COMPOSE_FILE) exec app npm run build
+	@docker compose -f $(COMPOSE_FILE) exec app npm run test
+	@echo "$(GREEN)✅ Todas as validações passaram!$(NC)"
+
+quality-check: ## Verificação rápida de qualidade (sem testes)
+	@echo "$(GREEN)⚡ Verificação rápida de qualidade...$(NC)"
+	@docker compose -f $(COMPOSE_FILE) exec app npm run lint
+	@docker compose -f $(COMPOSE_FILE) exec app npx tsc --noEmit
+	@echo "$(GREEN)✅ Qualidade de código OK!$(NC)"
 
 # Limpeza e manutenção
 clean: ## Parar containers e remover volumes (⚠️  APAGA DADOS DO BANCO)
@@ -121,13 +155,13 @@ clean-all: ## Limpeza completa (containers, volumes, imagens, cache)
 backup-db: ## Fazer backup do banco de dados
 	@echo "$(GREEN)Fazendo backup do banco...$(NC)"
 	@mkdir -p backups
-	@docker compose -f $(COMPOSE_FILE) exec mariadb mysqldump -u backend_app_user -pbackend_app_pass backend_app_db > backups/backup_$(shell date +%Y%m%d_%H%M%S).sql
+	@docker compose -f $(COMPOSE_FILE) exec -T mariadb mariadb-dump -u backend_app_user -pbackend_app_pass backend_app_db > backups/backup_$(shell date +%Y%m%d_%H%M%S).sql
 	@echo "$(GREEN)Backup salvo em backups/$(NC)"
 
 restore-db: ## Restaurar banco (precisa especificar arquivo: make restore-db FILE=backup.sql)
 	@if [ -z "$(FILE)" ]; then echo "$(RED)Erro: Especifique o arquivo com FILE=nome_do_arquivo.sql$(NC)"; exit 1; fi
 	@echo "$(GREEN)Restaurando banco de $(FILE)...$(NC)"
-	@docker compose -f $(COMPOSE_FILE) exec -T mariadb mysql -u backend_app_user -pbackend_app_pass backend_app_db < $(FILE)
+	@docker compose -f $(COMPOSE_FILE) exec -T mariadb mariadb -u backend_app_user -pbackend_app_pass backend_app_db < $(FILE)
 
 # Utilitários
 env: ## Copiar arquivo de exemplo de ambiente
@@ -150,10 +184,21 @@ restart-db: ## Reiniciar apenas o banco
 	@docker compose -f $(COMPOSE_FILE) restart mariadb
 
 # Comandos de conveniência
-dev: env up ## Setup completo para desenvolvimento
+dev: env up setup-deps ## Setup completo para desenvolvimento
 	@echo "$(GREEN)Ambiente de desenvolvimento pronto!$(NC)"
 	@echo "$(YELLOW)Acesse: http://localhost:3000$(NC)"
 	@echo "$(YELLOW)Health: http://localhost:3000/health$(NC)"
+
+setup: ## Setup completo do projeto - tudo que o dev precisa para iniciar (RECOMENDADO)
+	@echo "$(GREEN)🎯 Setup completo do projeto...$(NC)"
+	@make env
+	@make up
+	@make setup-deps
+	@echo "$(GREEN)🎉 Projeto totalmente configurado!$(NC)"
+	@echo "$(YELLOW)📋 Próximos passos:$(NC)"
+	@echo "$(YELLOW)   - Edite .env com suas configurações$(NC)"
+	@echo "$(YELLOW)   - Acesse http://localhost:3000$(NC)"
+	@echo "$(YELLOW)   - Os hooks de qualidade estão ativos!$(NC)"
 
 prod: env up-prod ## Setup para produção
 	@echo "$(GREEN)Ambiente de produção iniciado!$(NC)"
