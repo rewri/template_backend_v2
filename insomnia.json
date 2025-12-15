@@ -1,0 +1,623 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-12-12T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v8.0.0",
+  "resources": [
+    {
+      "_id": "req_01_app_hello",
+      "parentId": "fld_app",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}",
+      "name": "Hello World",
+      "description": "Mensagem de boas vindas da aplicação",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701523200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_02_app_health",
+      "parentId": "fld_app",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}/health",
+      "name": "Health Check",
+      "description": "Verificação de integridade da aplicação",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701523100000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_03_auth_register",
+      "parentId": "fld_auth",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}/auth/register",
+      "name": "Register User",
+      "description": "Registro de novo usuário",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecurePassword123!\",\n  \"firstName\": \"João\",\n  \"lastName\": \"Silva\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701523000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_04_auth_login",
+      "parentId": "fld_auth",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}/auth/login",
+      "name": "Login",
+      "description": "Login de usuário",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecurePassword123!\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701522900000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_05_auth_refresh",
+      "parentId": "fld_auth",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}/auth/refresh",
+      "name": "Refresh Token",
+      "description": "Renovar access token usando refresh token",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"refreshToken\": \"{{ _.refreshToken }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701522800000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_06_auth_logout",
+      "parentId": "fld_auth",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}/auth/logout",
+      "name": "Logout",
+      "description": "Logout do usuário (revoga refresh token)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"refreshToken\": \"{{ _.refreshToken }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.accessToken }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701522700000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_07_auth_me",
+      "parentId": "fld_auth",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}/auth/me",
+      "name": "Get Current User",
+      "description": "Dados do usuário logado",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.accessToken }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701522600000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_08_auth_forgot_password",
+      "parentId": "fld_auth",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}/auth/forgot-password",
+      "name": "Forgot Password",
+      "description": "Solicitar reset de senha",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user@example.com\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701522500000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_09_auth_reset_password",
+      "parentId": "fld_auth",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}/auth/reset-password",
+      "name": "Reset Password",
+      "description": "Resetar senha com token recebido",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"token\": \"reset-token-here\",\n  \"newPassword\": \"NewSecurePassword123!\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701522400000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_10_auth_verify_email",
+      "parentId": "fld_auth",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}/auth/verify-email",
+      "name": "Verify Email",
+      "description": "Verificar email com token",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"token\": \"email-verification-token-here\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701522300000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_11_employees_create",
+      "parentId": "fld_employees",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}/employees",
+      "name": "Create Employee",
+      "description": "Criar novo funcionário",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"João Silva\",\n  \"email\": \"joao.silva@company.com\",\n  \"phone\": \"+5511999999999\",\n  \"department\": \"TI\",\n  \"position\": \"Desenvolvedor\",\n  \"salary\": 5000.00\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.accessToken }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701522200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_12_employees_list",
+      "parentId": "fld_employees",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}/employees",
+      "name": "List Employees",
+      "description": "Listar funcionários com paginação",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1",
+          "description": "Número da página"
+        },
+        {
+          "name": "limit",
+          "value": "10",
+          "description": "Itens por página"
+        },
+        {
+          "name": "search",
+          "value": "",
+          "description": "Buscar por nome ou email",
+          "disabled": true
+        },
+        {
+          "name": "email",
+          "value": "",
+          "description": "Filtrar por email específico",
+          "disabled": true
+        }
+      ],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.accessToken }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701522100000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_13_employees_find",
+      "parentId": "fld_employees",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}/employees/1",
+      "name": "Find Employee by ID",
+      "description": "Buscar funcionário por ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.accessToken }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701522000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_14_employees_update",
+      "parentId": "fld_employees",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}/employees/1",
+      "name": "Update Employee",
+      "description": "Atualizar funcionário existente",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"João Silva Santos\",\n  \"email\": \"joao.santos@company.com\",\n  \"phone\": \"+5511888888888\",\n  \"department\": \"TI\",\n  \"position\": \"Desenvolvedor Sênior\",\n  \"salary\": 6500.00\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.accessToken }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701521900000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_15_employees_delete",
+      "parentId": "fld_employees",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "url": "{{ _.baseUrl }}/employees/1",
+      "name": "Delete Employee",
+      "description": "Deletar funcionário por ID",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.accessToken }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1701521800000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_app",
+      "parentId": "wrk_backend_api",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "name": "📱 App",
+      "description": "Endpoints gerais da aplicação",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1701523200000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_auth",
+      "parentId": "wrk_backend_api",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "name": "🔐 Authentication",
+      "description": "Endpoints de autenticação JWT",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1701523000000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_employees",
+      "parentId": "wrk_backend_api",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "name": "👥 Employees",
+      "description": "CRUD de funcionários (exemplo)",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1701522000000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_backend_api",
+      "parentId": null,
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "name": "Backend API - NestJS",
+      "description": "API REST desenvolvida com NestJS, TypeORM e autenticação JWT",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_base",
+      "parentId": "wrk_backend_api",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "name": "Base Environment",
+      "data": {
+        "baseUrl": "http://localhost:3000",
+        "accessToken": "",
+        "refreshToken": "",
+        "userId": ""
+      },
+      "dataPropertyOrder": {
+        "&": ["baseUrl", "accessToken", "refreshToken", "userId"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1701523200000,
+      "_type": "environment"
+    },
+    {
+      "_id": "env_development",
+      "parentId": "env_base",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "name": "Development",
+      "data": {
+        "baseUrl": "http://localhost:3000"
+      },
+      "dataPropertyOrder": {
+        "&": ["baseUrl"]
+      },
+      "color": "#28a745",
+      "isPrivate": false,
+      "metaSortKey": 1701523200000,
+      "_type": "environment"
+    },
+    {
+      "_id": "env_staging",
+      "parentId": "env_base",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "name": "Staging",
+      "data": {
+        "baseUrl": "https://api-staging.yourapp.com"
+      },
+      "dataPropertyOrder": {
+        "&": ["baseUrl"]
+      },
+      "color": "#ffc107",
+      "isPrivate": false,
+      "metaSortKey": 1701523100000,
+      "_type": "environment"
+    },
+    {
+      "_id": "env_production",
+      "parentId": "env_base",
+      "modified": 1701523200000,
+      "created": 1701523200000,
+      "name": "Production",
+      "data": {
+        "baseUrl": "https://api.yourapp.com"
+      },
+      "dataPropertyOrder": {
+        "&": ["baseUrl"]
+      },
+      "color": "#dc3545",
+      "isPrivate": false,
+      "metaSortKey": 1701523000000,
+      "_type": "environment"
+    }
+  ]
+}

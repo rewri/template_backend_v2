@@ -121,13 +121,13 @@ clean-all: ## Limpeza completa (containers, volumes, imagens, cache)
 backup-db: ## Fazer backup do banco de dados
 	@echo "$(GREEN)Fazendo backup do banco...$(NC)"
 	@mkdir -p backups
-	@docker compose -f $(COMPOSE_FILE) exec mariadb mysqldump -u backend_app_user -pbackend_app_pass backend_app_db > backups/backup_$(shell date +%Y%m%d_%H%M%S).sql
+	@docker compose -f $(COMPOSE_FILE) exec -T mariadb mariadb-dump -u backend_app_user -pbackend_app_pass backend_app_db > backups/backup_$(shell date +%Y%m%d_%H%M%S).sql
 	@echo "$(GREEN)Backup salvo em backups/$(NC)"
 
 restore-db: ## Restaurar banco (precisa especificar arquivo: make restore-db FILE=backup.sql)
 	@if [ -z "$(FILE)" ]; then echo "$(RED)Erro: Especifique o arquivo com FILE=nome_do_arquivo.sql$(NC)"; exit 1; fi
 	@echo "$(GREEN)Restaurando banco de $(FILE)...$(NC)"
-	@docker compose -f $(COMPOSE_FILE) exec -T mariadb mysql -u backend_app_user -pbackend_app_pass backend_app_db < $(FILE)
+	@docker compose -f $(COMPOSE_FILE) exec -T mariadb mariadb -u backend_app_user -pbackend_app_pass backend_app_db < $(FILE)
 
 # Utilitários
 env: ## Copiar arquivo de exemplo de ambiente
