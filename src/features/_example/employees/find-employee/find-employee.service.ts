@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Employee } from '../../shared/entities/employee.entity';
 import { EmployeeRepository } from '../shared/repositories/employee.repository';
+import { FindEmployeeResponseDTO } from './find-employee.dto';
 
 @Injectable()
 export class FindEmployeeService {
@@ -8,7 +8,7 @@ export class FindEmployeeService {
 
   constructor(private readonly employeeRepository: EmployeeRepository) {}
 
-  async findEmployee(id: number): Promise<Employee> {
+  async findEmployee(id: number): Promise<FindEmployeeResponseDTO> {
     try {
       const employee = await this.employeeRepository.findByID(id);
 
@@ -16,7 +16,7 @@ export class FindEmployeeService {
         throw new NotFoundException('Funcionário não encontrado');
       }
 
-      return employee;
+      return FindEmployeeResponseDTO.fromEntity(employee);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;

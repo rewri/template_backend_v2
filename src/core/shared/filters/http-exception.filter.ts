@@ -1,5 +1,6 @@
 import {
   ArgumentsHost,
+  BadRequestException,
   Catch,
   ExceptionFilter,
   HttpException,
@@ -34,14 +35,27 @@ export class HttpExceptionFilter implements ExceptionFilter {
         exceptionResponse !== null
       ) {
         const responseObj = exceptionResponse as Record<string, unknown>;
-        message =
-          (typeof responseObj.message === 'string'
-            ? responseObj.message
-            : undefined) || exception.message;
-        error =
-          (typeof responseObj.error === 'string'
-            ? responseObj.error
-            : undefined) || exception.name;
+
+        // Trata erros de validação do class-validator
+        if (
+          exception instanceof BadRequestException &&
+          Array.isArray(responseObj.message)
+        ) {
+          const validationMessages = responseObj.message as string[];
+          message = validationMessages.join('; ');
+          error = 'Validation Error';
+        } else {
+          message =
+            (typeof responseObj.message === 'string'
+              ? responseObj.message
+              : Array.isArray(responseObj.message)
+                ? responseObj.message.join('; ')
+                : undefined) || exception.message;
+          error =
+            (typeof responseObj.error === 'string'
+              ? responseObj.error
+              : undefined) || exception.name;
+        }
       } else {
         message = exception.message;
         error = exception.name;

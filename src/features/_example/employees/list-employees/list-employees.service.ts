@@ -1,9 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PaginationResponseDTO } from 'src/core/shared/dto/pagination-response.dto';
 import { PaginationHelper } from 'src/core/shared/helpers/pagination.helper';
-import { Employee } from '../../shared/entities/employee.entity';
 import { EmployeeRepository } from '../shared/repositories/employee.repository';
-import { ListEmployeesQueryDTO } from './list-employees.dto';
+import { ListEmployeeDTO, ListEmployeesQueryDTO } from './list-employees.dto';
 
 @Injectable()
 export class ListEmployeesService {
@@ -13,7 +12,7 @@ export class ListEmployeesService {
 
   async listEmployees(
     query: ListEmployeesQueryDTO,
-  ): Promise<PaginationResponseDTO<Employee>> {
+  ): Promise<PaginationResponseDTO<ListEmployeeDTO>> {
     try {
       const { data, total } = await this.employeeRepository.findAllPaginated(
         query,
@@ -21,7 +20,8 @@ export class ListEmployeesService {
         query.email,
       );
 
-      return PaginationHelper.createResponse(data, total, query);
+      const dtos = ListEmployeeDTO.fromEntities(data);
+      return PaginationHelper.createResponse(dtos, total, query);
     } catch (error) {
       this.logger.error('Erro ao listar funcionários:', {
         query,

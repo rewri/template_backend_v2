@@ -39,7 +39,8 @@ shared/entities/
 
 - **Employee** (1) → (N) **Extension Numbers**
 - Um funcionário pode ter múltiplos ramais
-- Cada ramal pertence a apenas um funcionário
+- Múltiplos funcionários podem compartilhar o mesmo número de ramal
+- **Nota**: Os ramais não são únicos no sistema, permitindo que diferentes colaboradores utilizem o mesmo número
 
 ## 🚀 Como Usar Este Exemplo
 

@@ -32,7 +32,7 @@ Um template completo de API REST construída com **NestJS**, **TypeScript** e **
 
 ```bash
 git clone <url-do-repositorio>
-cd backend
+cd template_backend_v2
 
 # Setup completo automático - configura TUDO!
 make setup
@@ -43,7 +43,7 @@ make setup
 - ✅ Cria arquivo .env
 - ✅ Sobe containers Docker
 - ✅ Instala dependências
-- ✅ Configura hooks de qualidade (Husky + lint-staged + ESLint + Prettier)
+- ✅ Configura hooks (Husky + lint-staged + ESLint + Prettier)
 - ✅ Valida TypeScript e Build
 
 ### 🔄 Setup Manual (se preferir)
@@ -56,7 +56,7 @@ vim .env  # Edite se necessário
 # 2. Suba os containers
 make up
 
-# 3. Configure hooks de qualidade
+# 3. Configure hooks
 make setup-deps
 ```
 
@@ -66,7 +66,7 @@ make setup-deps
 make setup-local
 ```
 
-## ⚙️ Hooks de Qualidade Automáticos
+## ⚙️ Hooks Automáticos
 
 ### 🚀 **Configuração Automática**
 
@@ -199,11 +199,52 @@ npm run test:cov
 
 ## 📖 Documentação da API
 
-Após iniciar a aplicação:
+### Swagger - Documentação Automática
 
-- **Swagger UI**: http://localhost:3000/api
+A API utiliza o **Swagger Plugin do NestJS** que gera automaticamente a documentação da API sem necessidade de decorators manuais.
+
+**Como funciona:**
+
+- ✅ **Detecção automática de tipos** - O plugin analisa DTOs e entities automaticamente
+- ✅ **Comentários JSDoc** - Use `/** comentário */` acima das propriedades para descrições
+- ✅ **Validações do class-validator** - Decorators como `@IsString()`, `@IsOptional()` são detectados
+- ✅ **Propriedades opcionais** - O `?` é automaticamente reconhecido
+- ✅ **Sem decorators manuais** - Não precisa adicionar `@ApiProperty()` em cada campo
+
+**Exemplo:**
+
+```typescript
+/**
+ * DTO para criação de um funcionário
+ */
+export class CreateEmployeeDTO {
+  /** Nome completo do funcionário */
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  /** Email corporativo do funcionário */
+  @IsEmail()
+  @IsOptional()
+  email?: string;
+}
+```
+
+O Swagger irá automaticamente:
+
+- Detectar que `name` é `string` e obrigatório
+- Detectar que `email` é `string` e opcional
+- Usar os comentários JSDoc como descrição
+
+**Acesso à documentação:**
+
+- **Swagger UI**: http://localhost:3000/api/docs
 - **Health Check**: http://localhost:3000/health
 - **API Base**: http://localhost:3000
+
+**Configuração (nest-cli.json):**
+
+O plugin está configurado em [nest-cli.json](nest-cli.json) para processar arquivos `.dto.ts`, `.entity.ts` e `.controller.ts`.
 
 ## 🐳 Docker
 
@@ -272,7 +313,7 @@ Este template inclui arquivos de exemplo para orientação:
 
 1. **Execute setup automático**: `make setup`
 2. **Estude os exemplos** em `src/features/_example/`
-3. **Desenvolva normalmente** - hooks de qualidade funcionam automaticamente
+3. **Desenvolva normalmente** - hooks funcionam automaticamente
 4. **Remova** a pasta `_example` quando não precisar mais
 5. **Delete migrations** de exemplo em `src/core/database/migrations/`
 6. **Crie** suas próprias entidades baseadas nos padrões dos exemplos

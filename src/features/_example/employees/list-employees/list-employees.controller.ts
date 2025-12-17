@@ -45,17 +45,43 @@ export class ListEmployeesController extends EmployeesController {
     status: 200,
     description: 'Lista de funcionários recuperada com sucesso',
     schema: {
-      allOf: [
-        { $ref: '#/components/schemas/PaginationResponseDTO' },
-        {
-          properties: {
-            data: {
-              type: 'array',
-              items: { $ref: '#/components/schemas/Employee' },
+      type: 'object',
+      properties: {
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              name: { type: 'string', example: 'João da Silva' },
+              email: { type: 'string', example: 'joao@email.com' },
+              extensionNumbers: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number', example: 1 },
+                    number: { type: 'string', example: '1001' },
+                  },
+                },
+              },
+              created_at: { type: 'string', format: 'date-time' },
+              updated_at: { type: 'string', format: 'date-time' },
             },
           },
         },
-      ],
+        meta: {
+          type: 'object',
+          properties: {
+            page: { type: 'number', example: 1 },
+            limit: { type: 'number', example: 10 },
+            total: { type: 'number', example: 25 },
+            totalPages: { type: 'number', example: 3 },
+            hasNextPage: { type: 'boolean', example: true },
+            hasPreviousPage: { type: 'boolean', example: false },
+          },
+        },
+      },
     },
   })
   @ApiResponse({

@@ -5,9 +5,11 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { Employee } from '../../shared/entities/employee.entity';
 import { EmployeeRepository } from '../shared/repositories/employee.repository';
-import { UpdateEmployeeDTO } from './update-employee.dto';
+import {
+  UpdateEmployeeDTO,
+  UpdateEmployeeResponseDTO,
+} from './update-employee.dto';
 
 @Injectable()
 export class UpdateEmployeeService {
@@ -18,7 +20,7 @@ export class UpdateEmployeeService {
   async updateEmployee(
     id: number,
     updateEmployeeDTO: UpdateEmployeeDTO,
-  ): Promise<Employee> {
+  ): Promise<UpdateEmployeeResponseDTO> {
     try {
       const existingEmployee = await this.employeeRepository.findByID(id);
       if (!existingEmployee) {
@@ -37,7 +39,11 @@ export class UpdateEmployeeService {
         }
       }
 
-      return await this.employeeRepository.update(id, updateEmployeeDTO);
+      const employee = await this.employeeRepository.update(
+        id,
+        updateEmployeeDTO,
+      );
+      return UpdateEmployeeResponseDTO.fromEntity(employee);
     } catch (error) {
       if (
         error instanceof NotFoundException ||

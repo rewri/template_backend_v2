@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -23,6 +23,26 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
+      transformOptions: {
+        enableImplicitConversion: false,
+      },
+      disableErrorMessages: false,
+      validationError: {
+        target: false,
+        value: false,
+      },
+      exceptionFactory: (errors) => {
+        const messages = errors.map((error) => {
+          const constraints = error.constraints
+            ? Object.values(error.constraints)
+            : [];
+          const children = error.children?.length
+            ? ` (${error.children.length} nested errors)`
+            : '';
+          return `${error.property}: ${constraints.join(', ')}${children}`;
+        });
+        return new BadRequestException(messages);
+      },
     }),
   );
 
@@ -49,6 +69,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
+      defaultModelsExpandDepth: -1, // Oculta a seção Schemas
     },
   });
 

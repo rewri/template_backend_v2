@@ -6,20 +6,13 @@ services:
       target: development
     container_name: backend_app
     restart: unless-stopped
+    user: '1000:1000'
     ports:
       - '3000:3000'
-    environment:
-      - NODE_ENV=development
-      - PORT=3000
-      - MARIADB_PORT=3306
-      - MARIADB_HOST=mariadb
-      - MARIADB_USER=backend_app_user
-      - MARIADB_PASSWORD=backend_app_pass
-      - MARIADB_DATABASE=backend_app_db
-      - MARIADB_SSL=false
+    env_file:
+      - .env
     volumes:
       - .:/usr/src/app
-      - node_modules_cache:/usr/src/app/node_modules
     depends_on:
       mariadb:
         condition: service_healthy
@@ -30,11 +23,10 @@ services:
     image: mariadb:11.2
     container_name: backend_database
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       MYSQL_ROOT_PASSWORD: backend_database_rootpass
-      MYSQL_USER: backend_app_user
-      MYSQL_PASSWORD: backend_app_pass
-      MYSQL_DATABASE: backend_app_db
       MYSQL_CHARACTER_SET_SERVER: utf8mb4
       MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
     ports:
@@ -54,8 +46,6 @@ services:
 
 volumes:
   mariadb_data:
-    driver: local
-  node_modules_cache:
     driver: local
 
 networks:

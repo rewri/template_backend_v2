@@ -1,55 +1,63 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
   IsEmail,
+  IsNotEmpty,
   IsOptional,
   IsString,
+  MaxLength,
+  MinLength,
   ValidateNested,
 } from 'class-validator';
+import { Employee } from '../../shared/entities/employee.entity';
+import { ExtensionNumber } from '../../shared/entities/extension_number.entity';
 
 export class UpdateExtensionNumberDTO {
-  @ApiPropertyOptional({
-    description: 'Número da extensão telefônica',
-    example: '1001',
-    type: String,
-  })
-  @IsString()
+  @IsString({ message: 'O número da extensão deve ser uma string' })
+  @IsNotEmpty({ message: 'O número da extensão não pode estar vazio' })
   number: string;
 }
 
 export class UpdateEmployeeDTO {
-  @ApiPropertyOptional({
-    description: 'Nome completo do funcionário',
-    example: 'João da Silva Santos',
-    type: String,
-    minLength: 1,
-    maxLength: 255,
-  })
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'O nome deve ser uma string' })
+  @MinLength(1, { message: 'O nome deve ter no mínimo 1 caractere' })
+  @MaxLength(255, { message: 'O nome deve ter no máximo 255 caracteres' })
   name?: string;
 
-  @ApiPropertyOptional({
-    description: 'Email do funcionário',
-    example: 'joao.santos@empresa.com',
-    format: 'email',
-    type: String,
-    uniqueItems: true,
-  })
   @IsOptional()
-  @IsEmail()
+  @IsEmail({}, { message: 'O email fornecido não é válido' })
   email?: string;
 
-  @ApiPropertyOptional({
-    description:
-      'Lista de números de extensão do funcionário (substitui todos os existentes)',
-    type: [UpdateExtensionNumberDTO],
-    example: [{ number: '1003' }, { number: '1004' }],
-  })
   @IsOptional()
-  @IsArray()
+  @IsArray({ message: 'extensionNumbers deve ser um array' })
   @ValidateNested({ each: true })
   @Type(() => UpdateExtensionNumberDTO)
   extensionNumbers?: UpdateExtensionNumberDTO[];
+}
+
+export class UpdateEmployeeResponseDTO {
+  id: number;
+  name: string;
+  email: string;
+  extensionNumbers: ExtensionNumber[];
+  created_at: Date;
+  updated_at: Date;
+
+  static fromEntity(employee: Employee): UpdateEmployeeResponseDTO {
+    const dto = new UpdateEmployeeResponseDTO();
+    dto.id = employee.id;
+    dto.name = employee.name;
+    dto.email = employee.email;
+    dto.extensionNumbers = employee.extensionNumbers || [];
+    dto.created_at = employee.created_at;
+    dto.updated_at = employee.updated_at;
+    return dto;
+  }
+
+  static fromEntities(employees: Employee[]): UpdateEmployeeResponseDTO[] {
+    return employees.map((employee) =>
+      UpdateEmployeeResponseDTO.fromEntity(employee),
+    );
+  }
 }

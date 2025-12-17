@@ -29,7 +29,7 @@ describe('CreateEmployeeService', () => {
       id: 1,
       name: 'João Silva',
       email: 'joao@email.com',
-      extensionNumbers: Promise.resolve([] as ExtensionNumber[]),
+      extensionNumbers: [] as ExtensionNumber[],
       created_at: new Date(),
       updated_at: new Date(),
     };

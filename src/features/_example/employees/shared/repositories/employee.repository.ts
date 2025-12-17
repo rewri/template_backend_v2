@@ -47,7 +47,9 @@ export class EmployeeRepository {
     search?: string,
     email?: string,
   ): Promise<{ data: Employee[]; total: number }> {
-    const queryBuilder = this.employeeRepository.createQueryBuilder('employee');
+    const queryBuilder = this.employeeRepository
+      .createQueryBuilder('employee')
+      .leftJoinAndSelect('employee.extensionNumbers', 'extensionNumbers');
 
     if (search) {
       queryBuilder.where(
@@ -75,7 +77,10 @@ export class EmployeeRepository {
   }
 
   async findByID(id: number): Promise<Employee | null> {
-    return await this.employeeRepository.findOne({ where: { id } });
+    return await this.employeeRepository.findOne({
+      where: { id },
+      relations: ['extensionNumbers'],
+    });
   }
 
   async update(id: number, data: UpdateEmployeeDTO): Promise<Employee> {
@@ -85,7 +90,6 @@ export class EmployeeRepository {
         throw new Error('Funcionário não encontrado');
       }
 
-      // Verifica se o email está sendo alterado e se já existe
       if (data.email && data.email !== employee.email) {
         const existingEmployee = await this.findByEmail(data.email);
         if (existingEmployee) {
@@ -93,18 +97,14 @@ export class EmployeeRepository {
         }
       }
 
-      // Atualiza os dados básicos do funcionário
       await manager.update(Employee, id, {
         ...(data.name && { name: data.name }),
         ...(data.email && { email: data.email }),
       });
 
-      // Gerencia extension numbers se fornecidos
       if (data.extensionNumbers !== undefined) {
-        // Remove extension numbers existentes
         await manager.delete(ExtensionNumber, { employee_id: id });
 
-        // Adiciona novos extension numbers se houver
         if (data.extensionNumbers.length > 0) {
           const extensionNumbers = data.extensionNumbers.map((ext) =>
             this.extensionNumberRepository.create({
@@ -116,7 +116,6 @@ export class EmployeeRepository {
         }
       }
 
-      // Retorna o funcionário atualizado usando o manager da transação
       const updatedEmployee = await manager.findOne(Employee, {
         where: { id },
       });
@@ -134,10 +133,8 @@ export class EmployeeRepository {
         throw new Error('Funcionário não encontrado');
       }
 
-      // Remove extension numbers primeiro (cascade deve fazer isso automaticamente, mas para garantir)
       await manager.delete(ExtensionNumber, { employee_id: id });
 
-      // Remove o funcionário
       await manager.delete(Employee, { id });
     });
   }

@@ -80,17 +80,16 @@ db: ## Acessar MariaDB CLI
 install: ## Instalar dependências npm
 	@echo "$(GREEN)Instalando dependências...$(NC)"
 	@docker compose -f $(COMPOSE_FILE) exec app npm install
-	@docker compose -f $(COMPOSE_FILE) exec app chown -R nestjs:nodejs /usr/src/app/node_modules
 
-setup-deps: ## Setup de dependências + hooks de qualidade
+setup-deps: ## Setup de dependências + hooks
 	@echo "$(GREEN)🚀 Setup de dependências do projeto...$(NC)"
 	@make install
 	@make setup-hooks
 	@echo "$(GREEN)✅ Dependências e hooks configurados!$(NC)"
-	@echo "$(YELLOW)📋 Hooks de qualidade ativados (ESLint + Prettier + Build + TypeScript)$(NC)"
+	@echo "$(YELLOW)📋 Hooks ativados (ESLint + Prettier + Build + TypeScript)$(NC)"
 
-setup-hooks: ## Configurar hooks de qualidade de código (Husky + lint-staged)
-	@echo "$(GREEN)⚙️  Configurando hooks de qualidade...$(NC)"
+setup-hooks: ## Configurar hooks de código (Husky + lint-staged)
+	@echo "$(GREEN)⚙️  Configurando hooks...$(NC)"
 	@docker compose -f $(COMPOSE_FILE) exec app npm run prepare
 	@echo "$(GREEN)✅ Hooks configurados!$(NC)"
 	@echo "$(YELLOW)📝 Pre-commit: ESLint + Prettier + Build + TypeScript validation$(NC)"
@@ -198,7 +197,7 @@ setup: ## Setup completo do projeto - tudo que o dev precisa para iniciar (RECOM
 	@echo "$(YELLOW)📋 Próximos passos:$(NC)"
 	@echo "$(YELLOW)   - Edite .env com suas configurações$(NC)"
 	@echo "$(YELLOW)   - Acesse http://localhost:3000$(NC)"
-	@echo "$(YELLOW)   - Os hooks de qualidade estão ativos!$(NC)"
+	@echo "$(YELLOW)   - Os hooks estão ativos!$(NC)"
 
 prod: env up-prod ## Setup para produção
 	@echo "$(GREEN)Ambiente de produção iniciado!$(NC)"

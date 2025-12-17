@@ -4,9 +4,11 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { Employee } from '../../shared/entities/employee.entity';
 import { EmployeeRepository } from '../shared/repositories/employee.repository';
-import { CreateEmployeeDTO } from './create-employee.dto';
+import {
+  CreateEmployeeDTO,
+  CreateEmployeeResponseDTO,
+} from './create-employee.dto';
 
 @Injectable()
 export class CreateEmployeeService {
@@ -16,7 +18,7 @@ export class CreateEmployeeService {
 
   async createEmployee(
     createEmployeeDTO: CreateEmployeeDTO,
-  ): Promise<Employee> {
+  ): Promise<CreateEmployeeResponseDTO> {
     try {
       const existingEmployee = await this.employeeRepository.findByEmail(
         createEmployeeDTO.email,
@@ -26,7 +28,8 @@ export class CreateEmployeeService {
         throw new ConflictException('Email já está em uso');
       }
 
-      return await this.employeeRepository.create(createEmployeeDTO);
+      const employee = await this.employeeRepository.create(createEmployeeDTO);
+      return CreateEmployeeResponseDTO.fromEntity(employee);
     } catch (error) {
       if (error instanceof ConflictException) {
         throw error;
